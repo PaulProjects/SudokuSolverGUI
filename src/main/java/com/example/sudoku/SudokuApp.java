@@ -87,7 +87,7 @@ public class SudokuApp extends Application {
         //b1
         b1.hoverProperty().addListener((observableValue, aBoolean, t1) -> {
             if (t1) {
-                b1.setStyle("-fx-background.color;");
+                b1.setStyle("-fx-background.color: White;");
             } else {
                 b1.setStyle("-fx-background-color: transparent;");
             }
@@ -98,7 +98,7 @@ public class SudokuApp extends Application {
         //b3
         b3.hoverProperty().addListener((observableValue, aBoolean, t1) -> {
             if (t1) {
-                b3.setStyle("-fx-background.color;");
+                b3.setStyle("-fx-background.color: White;");
             } else {
                 b3.setStyle("-fx-background-color: transparent;");
             }
@@ -109,7 +109,7 @@ public class SudokuApp extends Application {
         //b4
         b4.hoverProperty().addListener((observableValue, aBoolean, t1) -> {
             if (t1) {
-                b4.setStyle("-fx-background.color;");
+                b4.setStyle("-fx-background.color: White;");
             } else {
                 b4.setStyle("-fx-background-color: transparent;");
             }
@@ -121,7 +121,7 @@ public class SudokuApp extends Application {
 
         comboBox.hoverProperty().addListener((observableValue, aBoolean, t1) -> {
             if (t1) {
-                comboBox.setStyle("-fx-background.color;");
+                comboBox.setStyle("-fx-background.color: White;");
             } else {
                 comboBox.setStyle("-fx-background-color: transparent;");
             }
@@ -130,7 +130,7 @@ public class SudokuApp extends Application {
         //b5
         b5.hoverProperty().addListener((observableValue, aBoolean, t1) -> {
             if (t1) {
-                b5.setStyle("-fx-background.color;");
+                b5.setStyle("-fx-background.color: White;");
             } else {
                 b5.setStyle("-fx-background-color: transparent;");
             }
@@ -163,34 +163,38 @@ public class SudokuApp extends Application {
         Sudoku psudoku = new Sudoku();
         try {
             intsudoku = psudoku.sudokusolver(intsudoku);
+            //<--intsudoku
+            tileconvert(intsudoku);
+
+            //Alert
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Solved!");
+            Integer integer = psudoku.getreturns();
+            alert.setHeaderText("Backtracks " + integer);
+            if (integer < 100) {
+                alert.setContentText("Difficulty rating: very simple");
+            } else if (integer < 100) {
+                alert.setContentText("Difficulty rating: simple");
+            } else if (integer < 300) {
+                alert.setContentText("Difficulty rating: medium");
+            } else if (integer < 500) {
+                alert.setContentText("Difficulty rating: hard");
+            } else {
+                alert.setContentText("Difficulty rating: very hard");
+            }
+            alert.show();
+            showtooltips = false;
+            for (Tile tile : tileGroup) {
+                tile.hidenumbers();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             //Alert
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Warning");
-            Integer integer = psudoku.getreturns();
             alert.setHeaderText("Sudoku not possible");
+            alert.show();
         }
-        //<--intsudoku
-        tileconvert(intsudoku);
-
-        //Alert
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Solved!");
-        Integer integer = psudoku.getreturns();
-        alert.setHeaderText("Backtracks " + integer);
-        if (integer < 100) {
-            alert.setContentText("Difficulty rating: very simple");
-        } else if (integer < 100) {
-            alert.setContentText("Difficulty rating: simple");
-        } else if (integer < 300) {
-            alert.setContentText("Difficulty rating: medium");
-        } else if (integer < 500) {
-            alert.setContentText("Difficulty rating: hard");
-        } else {
-            alert.setContentText("Difficulty rating: very hard");
-        }
-        alert.show();
     }
 
     private void clear() {

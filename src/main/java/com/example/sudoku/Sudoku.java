@@ -23,17 +23,66 @@ public class Sudoku {
     public Integer[][] sudokusolver(Integer[][] pinput) throws Exception{
         //Get Sudoku
         sudokuanlegen(pinput);
+        //check if given sudoku is valid
+        if(isillegal(sudoku)){
+            throw new Exception("not possible");
+        }
         //solve sudoku
-        if (solveSudoku()) {
+        if (solveSudoku(sudoku)) {
             return sudokuausgeben(sudoku);
         } else {
             throw new Exception("not possible");
         }
     }
 
-    public void kachelsudokusolver(Kachel[][] pinput){
-        sudoku = pinput;
-        solveSudoku();
+    private boolean isillegal(Kachel[][] psudoku){
+        //check the rows for double values
+        for (int i = 0; i < 9; i++) {
+            ArrayList<Integer> plist = new ArrayList<>();
+            for (int j = 0; j < 9; j++) {
+                //contains a number?
+                if(psudoku[i][j].getnum()!=0){
+                    //if already in the list return false
+                    if(plist.contains(psudoku[i][j].getnum())){
+                        return true;
+                    }
+                    plist.add(psudoku[i][j].getnum());
+                }
+            }
+        }
+        //checks the columns
+        for (int i = 0; i < 9; i++) {
+            ArrayList<Integer> plist = new ArrayList<>();
+            for (int j = 0; j < 9; j++) {
+                //contains a number?
+                if(psudoku[j][i].getnum()!=0){
+                    //if already in the list return false
+                    if(plist.contains(psudoku[j][i].getnum())){
+                        return true;
+                    }
+                    plist.add(psudoku[j][i].getnum());
+                }
+            }
+        }
+        //check the quadrants
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                //from here the parts of a single quadrant
+                ArrayList<Integer> plist = new ArrayList<>();
+                for (int k = i*3; k < i*3+3; k++) {
+                    for (int l = j*3; l < j*3+3; l++) {
+                        if(psudoku[k][l].getnum()!=0){
+                            //if already in the list return false
+                            if(plist.contains(psudoku[k][l].getnum())){
+                                return true;
+                            }
+                            plist.add(psudoku[k][l].getnum());
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     //Possibilities
@@ -72,7 +121,7 @@ public class Sudoku {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 //Checks if the numbers are 1-9
-                if (Objects.nonNull(intsudoku[i][j])) {
+                if (intsudoku[i][j] != null) {
                     if (intsudoku[i][j] > 0 && intsudoku[i][j] < 10) {
                         sudoku[i][j].setnum(intsudoku[i][j]);
                     } else { //somewhat redundant but avoids null pointers
@@ -118,9 +167,9 @@ public class Sudoku {
         return new coords();
     }
 
-    private boolean solveSudoku() {
+    private boolean solveSudoku(Kachel[][] psudoku) {
         //gimme gimme gimme an empty field
-        coords c = findemptiness(sudoku);
+        coords c = findemptiness(psudoku);
         // No empty spaces left? If yes, the job is done
         if (c.getdone()) {
             returns ++;
@@ -131,16 +180,16 @@ public class Sudoku {
         int column = c.getcolumn();
         // backtracking
         for (int num = 1; num<=9;num++) {
-            if (valid(sudoku, row, column,num)) {
-                sudoku[row][column].setnum(num);
+            if (valid(psudoku, row, column,num)) {
+                psudoku[row][column].setnum(num);
                 //Rekursion
-                if (solveSudoku()) {
+                if (solveSudoku(psudoku)) {
                     returns ++;
                     return true;
                 }
                 //Replaces the made mistakes with 0, so it can work on it again
                 else {
-                    sudoku[row][column].setnum(0);
+                    psudoku[row][column].setnum(0);
                 }
             }
         }
@@ -151,14 +200,14 @@ public class Sudoku {
     private static boolean valid(Kachel[][] psudoku, int row, int column, Integer num) {
         // Check row
         for (int d = 0; d < psudoku.length; d++) {
-            if (Objects.equals(psudoku[row][d].getnum(), num)) {
+            if (psudoku[row][d].getnum() == num) {
                 return false;
             }
         }
 
         // Check the Column
         for (Kachel[] kachels : psudoku) {
-            if (Objects.equals(kachels[column].getnum(), num)) {
+            if (kachels[column].getnum() == num) {
                 return false;
             }
         }
@@ -170,7 +219,7 @@ public class Sudoku {
 
         for (int r = boxRowStart; r < boxRowStart + sqrt; r++) {
             for (int d = boxColStart; d < boxColStart + sqrt; d++) {
-                if (Objects.equals(psudoku[r][d].getnum(), num)) {
+                if (psudoku[r][d].getnum() == num) {
                     return false;
                 }
             }
@@ -187,7 +236,8 @@ public class Sudoku {
         qcolumn = qcolumn * 3 - 3;
 
         //DEBUG
-        System.out.println("Quadrant:" + qrow + " ; " + qcolumn);
+        System.out.println("Generating Sudoku");
+        System.out.println("Selected Quadrant:" + qrow + " ; " + qcolumn);
 
         //List cointaining 1-9
         List<Integer> plist = new LinkedList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9));
@@ -197,16 +247,12 @@ public class Sudoku {
         for(int i = 0; i < 3 ; i++){
             for (int j = 0; j < 3; j++) {
                 int num = plist.get((int)(Math.random()*((plist.size()))));
-
-                //DEBUG
-                System.out.println("Picked: " + num + "From the list, in run:" + count + "  Coordinates: row: " + i + " column: " + j);
-
                 plist.remove(Integer.valueOf(num));
+                System.out.print(num + "    ");
                 sudoku[qrow+i][qcolumn+j].setnum(num);
             }
+            System.out.println("");
         }
-        //Places the backup
-        //sudoku = psudoku;
 
 
         //Difficulty comes in place
@@ -215,7 +261,7 @@ public class Sudoku {
         int amount = (int)(Math.random()*((max-min)+1))+min;
         System.out.println("min:" + min + " max:" + max + " amount:" + amount);
         //solves it
-        solveSudoku();
+        solveSudoku(sudoku);
         //Deletes Numbers from it
         ArrayList<String> pdeleted = new ArrayList<>();
         for (int i = 0; i < amount; i++) {

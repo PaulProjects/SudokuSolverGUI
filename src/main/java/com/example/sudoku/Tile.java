@@ -191,7 +191,7 @@ public class Tile{
     //Changes Style of the Tiles
     //Style 0: White Background
     //Style 1: Grey Background
-    //Style 2:
+    //Style 2: #D0FDFB Background
     private void changeTileStyle(int s){
         switch (s){
             case 0:
@@ -220,6 +220,20 @@ public class Tile{
                 }
                 if (x == 2 && y == 2 || x == 5 && y == 5 || x == 2 && y == 5 || x == 5 && y == 2){
                     rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 5 2; -fx-border-color: black; -fx-background-color: #C0C0C0;");
+                }
+                break;
+            case 2:
+                rectangle.setStyle("-fx-fill: green; -fx-border-width: 2 2 2 2; -fx-border-color: black; -fx-background-color: #D0FDFB;");
+                //Right Border
+                if(x==2 || x == 5) {
+                    rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 2 2; -fx-border-color: black; -fx-background-color: #D0FDFB;");
+                }
+                //Bottom Border
+                if (y == 2 || y == 5) {
+                    rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 2 5 2; -fx-border-color: black; -fx-background-color: #D0FDFB;");
+                }
+                if (x == 2 && y == 2 || x == 5 && y == 5 || x == 2 && y == 5 || x == 5 && y == 2){
+                    rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 5 2; -fx-border-color: black; -fx-background-color: #D0FDFB;");
                 }
                 break;
         }
