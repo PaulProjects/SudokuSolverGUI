@@ -4,11 +4,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.util.Duration;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Tile{
     /*
@@ -62,14 +61,6 @@ public class Tile{
         }
     }
 
-    //maybe usefull later on
-    public void setTooltip(String str){
-        Tooltip tooltip = new Tooltip(str);
-        tooltip.setShowDelay(Duration.ZERO);
-        textField.setTooltip(tooltip);
-
-    }
-
     public void setNum(Integer i){
         if(i != null) {
             textField.setText(String.valueOf(i));
@@ -80,7 +71,7 @@ public class Tile{
     }
 
     public Integer getNum(){
-        if(textField.getText() != "") {
+        if(!Objects.equals(textField.getText(), "")) {
             return Integer.valueOf(textField.getText());
         }
         else{
@@ -175,14 +166,11 @@ public class Tile{
             Listeners
          */
         //only numbers in the field
-        textField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                gotupdated = true;
-                //one digit or nothing
-                if (!newValue.matches("[1-9]|$")) {
-                    textField.setText(oldValue);
-                }
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            gotupdated = true;
+            //one digit or nothing
+            if (!newValue.matches("[1-9]|$")) {
+                textField.setText(oldValue);
             }
         });
 
@@ -192,50 +180,65 @@ public class Tile{
     //Style 0: White Background
     //Style 1: Grey Background
     //Style 2: #D0FDFB Background
-    private void changeTileStyle(int s){
-        switch (s){
-            case 0:
+    //Style 3: Red Background
+    public void changeTileStyle(int s){
+        switch (s) {
+            case 0 -> {
                 rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 2 2 2; -fx-border-color: black;");
                 //Right Border
-                if(x==2 || x == 5) {
+                if (x == 2 || x == 5) {
                     rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 2 2; -fx-border-color: black;");
                 }
                 //Bottom Border
                 if (y == 2 || y == 5) {
                     rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 2 5 2; -fx-border-color: black;");
                 }
-                if (x == 2 && y == 2 || x == 5 && y == 5 || x == 2 && y == 5 || x == 5 && y == 2){
+                if (x == 2 && y == 2 || x == 5 && y == 5 || x == 2 && y == 5 || x == 5 && y == 2) {
                     rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 5 2; -fx-border-color: black;");
                 }
-                break;
-            case 1:
+            }
+            case 1 -> {
                 rectangle.setStyle("-fx-fill: green; -fx-border-width: 2 2 2 2; -fx-border-color: black; -fx-background-color: #C0C0C0;");
                 //Right Border
-                if(x==2 || x == 5) {
+                if (x == 2 || x == 5) {
                     rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 2 2; -fx-border-color: black; -fx-background-color: #C0C0C0;");
                 }
                 //Bottom Border
                 if (y == 2 || y == 5) {
                     rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 2 5 2; -fx-border-color: black; -fx-background-color: #C0C0C0;");
                 }
-                if (x == 2 && y == 2 || x == 5 && y == 5 || x == 2 && y == 5 || x == 5 && y == 2){
+                if (x == 2 && y == 2 || x == 5 && y == 5 || x == 2 && y == 5 || x == 5 && y == 2) {
                     rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 5 2; -fx-border-color: black; -fx-background-color: #C0C0C0;");
                 }
-                break;
-            case 2:
+            }
+            case 2 -> {
                 rectangle.setStyle("-fx-fill: green; -fx-border-width: 2 2 2 2; -fx-border-color: black; -fx-background-color: #D0FDFB;");
                 //Right Border
-                if(x==2 || x == 5) {
+                if (x == 2 || x == 5) {
                     rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 2 2; -fx-border-color: black; -fx-background-color: #D0FDFB;");
                 }
                 //Bottom Border
                 if (y == 2 || y == 5) {
                     rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 2 5 2; -fx-border-color: black; -fx-background-color: #D0FDFB;");
                 }
-                if (x == 2 && y == 2 || x == 5 && y == 5 || x == 2 && y == 5 || x == 5 && y == 2){
+                if (x == 2 && y == 2 || x == 5 && y == 5 || x == 2 && y == 5 || x == 5 && y == 2) {
                     rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 5 2; -fx-border-color: black; -fx-background-color: #D0FDFB;");
                 }
-                break;
+            }
+            case 3 -> {
+                rectangle.setStyle("-fx-fill: green; -fx-border-width: 2 2 2 2; -fx-border-color: black; -fx-background-color: #ff0000;");
+                //Right Border
+                if (x == 2 || x == 5) {
+                    rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 2 2; -fx-border-color: black; -fx-background-color: #ff0000;");
+                }
+                //Bottom Border
+                if (y == 2 || y == 5) {
+                    rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 2 5 2; -fx-border-color: black; -fx-background-color: #ff0000;");
+                }
+                if (x == 2 && y == 2 || x == 5 && y == 5 || x == 2 && y == 5 || x == 5 && y == 2) {
+                    rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 5 2; -fx-border-color: black; -fx-background-color: #ff0000;");
+                }
+            }
         }
     }
 }

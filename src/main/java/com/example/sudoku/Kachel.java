@@ -7,8 +7,8 @@ public class Kachel {
     //Display number
     public Integer num = 0;
 
-    private int x;
-    private int y;
+    public final int x;
+    public final int y;
 
     public Kachel(int x, int y){
         this.x =x;

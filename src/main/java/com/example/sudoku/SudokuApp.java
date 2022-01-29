@@ -12,8 +12,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class SudokuApp extends Application {
@@ -28,6 +28,11 @@ public class SudokuApp extends Application {
 
     //Tile Groups
     private ArrayList<Tile> tileGroup = new ArrayList<>();
+    //Sudoku "backup" saves the state before the user edited it
+    private Integer[][] previousSudoku = new Integer[9][9];
+
+    //Mistakes the user made
+    private int mistakes = 0;
 
     private Parent createContent() {
         Pane root = new Pane();
@@ -166,29 +171,31 @@ public class SudokuApp extends Application {
             //<--intsudoku
             tileconvert(intsudoku);
 
-            //Alert
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Solved!");
             Integer integer = psudoku.getreturns();
-            alert.setHeaderText("Backtracks " + integer);
-            if (integer < 100) {
-                alert.setContentText("Difficulty rating: very simple");
-            } else if (integer < 100) {
-                alert.setContentText("Difficulty rating: simple");
-            } else if (integer < 300) {
-                alert.setContentText("Difficulty rating: medium");
-            } else if (integer < 500) {
-                alert.setContentText("Difficulty rating: hard");
-            } else {
-                alert.setContentText("Difficulty rating: very hard");
+
+            if(integer > 1) {
+                //Alert
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Solved!");
+                alert.setHeaderText("Backtracks " + integer);
+                if (integer < 100) {
+                    alert.setContentText("Difficulty rating: easy");
+                } else if (integer < 200) {
+                    alert.setContentText("Difficulty rating: medium");
+                } else if (integer < 500) {
+                    alert.setContentText("Difficulty rating: hard");
+                } else if (integer < 1000) {
+                    alert.setContentText("Difficulty rating: very hard");
+                } else {
+                    alert.setContentText("Difficulty rating: very hard");
+                }
+                alert.show();
             }
-            alert.show();
             showtooltips = false;
             for (Tile tile : tileGroup) {
                 tile.hidenumbers();
             }
         } catch (Exception e) {
-            e.printStackTrace();
             //Alert
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Warning");
@@ -230,6 +237,7 @@ public class SudokuApp extends Application {
                 counter++;
             }
         }
+        updateprevious();
     }
 
     private void possibilities() {
@@ -251,12 +259,11 @@ public class SudokuApp extends Application {
     //Updates the possibilites
     private void updatepossibilities(){
         //Event detector (nice)
-        System.out.println("got event");
         boolean updated = false;
 
         for (Tile tile : tileGroup) {
             if (tile.getupdated()) {
-                System.out.println("Detected Updated");
+                System.out.println("Detected Update");
                 updated = true;
                 break;
             }
@@ -274,7 +281,7 @@ public class SudokuApp extends Application {
             /*
                 tooltip updater
              */
-            if(showtooltips == true) {
+            if(showtooltips) {
                 //new Instance of Sudoku
                 Sudoku psudoku = new Sudoku();
                 Integer[][] intarr = intconvert();
@@ -295,6 +302,41 @@ public class SudokuApp extends Application {
                     }
                 }
             }
+
+            /*
+                handles the previous sudoku
+             */
+
+            //what tile changed?
+            for (Tile tile : tileGroup) {
+                if(!Objects.equals(tile.getNum(), previousSudoku[tile.y][tile.x])){
+                    updateprevious();
+                    if(tile.getNum() != null) {
+                        //determind if the change works
+                        Sudoku subSubdoku = new Sudoku();
+                        //solves it looks and difficulty and then decides if its good or not
+                        try {
+                            //solves it
+                            subSubdoku.sudokusolver(intconvert());
+                            //if it gets till here it seems to work, so we paint it 2
+                            tile.changeTileStyle(2);
+                        } catch (Exception e) {
+                            //doesnt seem to work? well then we color it red
+                            tile.changeTileStyle(3);
+                        }
+                    }
+                    else {
+                        tile.changeTileStyle(0);
+                    }
+                }
+            }
+        }
+    }
+
+    //updates the saved state of the sudoku to the given state atm
+    private void updateprevious(){
+        for (Tile tile: tileGroup) {
+            previousSudoku[tile.y][tile.x] = tile.getNum();
         }
     }
 
