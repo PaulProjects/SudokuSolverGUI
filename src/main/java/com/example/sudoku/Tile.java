@@ -212,17 +212,17 @@ public class Tile{
                 }
             }
             case 2 -> {
-                rectangle.setStyle("-fx-fill: green; -fx-border-width: 2 2 2 2; -fx-border-color: black; -fx-background-color: #D0FDFB;");
+                rectangle.setStyle("-fx-fill: green; -fx-border-width: 2 2 2 2; -fx-border-color: black; -fx-background-color: #89FE05;");
                 //Right Border
                 if (x == 2 || x == 5) {
-                    rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 2 2; -fx-border-color: black; -fx-background-color: #D0FDFB;");
+                    rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 2 2; -fx-border-color: black; -fx-background-color: #89FE05;");
                 }
                 //Bottom Border
                 if (y == 2 || y == 5) {
-                    rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 2 5 2; -fx-border-color: black; -fx-background-color: #D0FDFB;");
+                    rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 2 5 2; -fx-border-color: black; -fx-background-color: #89FE05;");
                 }
                 if (x == 2 && y == 2 || x == 5 && y == 5 || x == 2 && y == 5 || x == 5 && y == 2) {
-                    rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 5 2; -fx-border-color: black; -fx-background-color: #D0FDFB;");
+                    rectangle.setStyle("-fx-fill: white; -fx-border-width: 2 5 5 2; -fx-border-color: black; -fx-background-color: #89FE05;");
                 }
             }
             case 3 -> {

@@ -12,6 +12,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -57,7 +59,7 @@ public class SudokuApp extends Application {
                         "Very Hard"
                 );
         ComboBox comboBox = new ComboBox(options);
-        comboBox.getSelectionModel().select(0);
+        comboBox.getSelectionModel().select(1);
 
         comboBox.setStyle("-fx-background-color: transparent;");
 
@@ -150,6 +152,7 @@ public class SudokuApp extends Application {
     public void start(Stage primaryStage) {
         Scene scene = new Scene(createContent());
         primaryStage.setTitle("Sudoku");
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -184,8 +187,6 @@ public class SudokuApp extends Application {
                     alert.setContentText("Difficulty rating: medium");
                 } else if (integer < 500) {
                     alert.setContentText("Difficulty rating: hard");
-                } else if (integer < 1000) {
-                    alert.setContentText("Difficulty rating: very hard");
                 } else {
                     alert.setContentText("Difficulty rating: very hard");
                 }
@@ -215,6 +216,7 @@ public class SudokuApp extends Application {
         for (Tile tile : tileGroup) {
             tile.hidenumbers();
         }
+        updateprevious();
     }
 
     private void generate(int index) {
